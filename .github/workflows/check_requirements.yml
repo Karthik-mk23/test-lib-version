@@ -1,4 +1,4 @@
-name: Check Python requirements
+name: Check Python requirements and update
 
 on:
   push:
@@ -37,5 +37,16 @@ jobs:
             echo "Requirements are up to date."
           else
             echo "Requirements have changed!"
+            
             # Add any additional steps for notification here
+
+            # Update versions in requirements.txt
+            pip-compile --output-file=requirements.txt requirements.in
+
+            # Commit the updated requirements.txt
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add requirements.txt
+            git commit -m "Update library versions in requirements.txt" || true
+            git push
           fi
