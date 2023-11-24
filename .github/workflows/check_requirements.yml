@@ -1,4 +1,4 @@
-name: Check Python requirements and update
+name: Check Python requirements
 
 on:
   push:
@@ -26,27 +26,13 @@ jobs:
 
       - name: Check for changes
         run: |
-          # Install pipdeptree
-          pip install pipdeptree
-
-          # Get the current installed packages and their versions
-          INSTALLED_PACKAGES=$(pipdeptree --warn silence | grep -E '^\S+' | cut -d'=' -f 1)
+          # Get the currently installed packages and their versions
+          INSTALLED_PACKAGES=$(pip freeze | cut -d'=' -f 1)
 
           # Compare with versions in requirements.txt
           if diff -u <(echo "$INSTALLED_PACKAGES") <(grep -E '^\S+' requirements.txt); then
             echo "Requirements are up to date."
           else
             echo "Requirements have changed!"
-            
             # Add any additional steps for notification here
-
-            # Update versions in requirements.txt
-            pip-compile --output-file=requirements.txt requirements.in
-
-            # Commit the updated requirements.txt
-            git config --local user.email "action@github.com"
-            git config --local user.name "GitHub Action"
-            git add requirements.txt
-            git commit -m "Update library versions in requirements.txt" || true
-            git push
           fi
