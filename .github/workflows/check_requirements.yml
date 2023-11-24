@@ -39,3 +39,6 @@ jobs:
             echo "$INSTALLED_PACKAGES" > requirements_snapshot.txt
             # Add any additional steps for notification here
           fi
+          echo "Old versions:"
+echo "$INSTALLED_PACKAGES" | grep -vF -f requirements_snapshot.txt
+
