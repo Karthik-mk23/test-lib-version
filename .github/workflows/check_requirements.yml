@@ -1,1 +1,41 @@
+name: Check Python requirements
 
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-requirements:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8  # Choose a version that works
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get install python3-distutils
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Check for changes
+        run: |
+          # Install pipdeptree
+          pip install pipdeptree
+
+          # Get the current installed packages and their versions
+          INSTALLED_PACKAGES=$(pipdeptree --warn silence | grep -E '^\S+' | cut -d'=' -f 1)
+
+          # Compare with versions in requirements.txt
+          if diff -u <(echo "$INSTALLED_PACKAGES") <(grep -E '^\S+' requirements.txt); then
+            echo "Requirements are up to date."
+          else
+            echo "Requirements have changed!"
+            # Add any additional steps for notification here
+          fi
