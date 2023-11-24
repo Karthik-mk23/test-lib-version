@@ -1,2 +1,5 @@
-matplotlib
-numpy
+Flask-Cors
+cryptography
+marshmallow
+openai==0.27.10
+frontegg==2.1.7
