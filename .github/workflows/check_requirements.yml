@@ -27,13 +27,15 @@ jobs:
       - name: Check for changes
         id: check
         run: |
-          INSTALLED_MATPLOTLIB_VERSION=$(pip freeze | grep -E '^matplotlib==' | cut -d'=' -f 3)
-          SAVED_MATPLOTLIB_VERSION=$(grep -E '^matplotlib==' requirements_snapshot.txt | cut -d'=' -f 3)
+          INSTALLED_PACKAGES=$(pip freeze)
+          DIFF_RESULT=$(diff -u <(echo "$INSTALLED_PACKAGES") <(cat requirements_snapshot.txt))
 
-          if [ "$INSTALLED_MATPLOTLIB_VERSION" == "$SAVED_MATPLOTLIB_VERSION" ]; then
-            echo "Matplotlib version is up to date: $INSTALLED_MATPLOTLIB_VERSION"
+          if [ -z "$DIFF_RESULT" ]; then
+            echo "Requirements are up to date."
           else
-            echo "Matplotlib version has changed from $SAVED_MATPLOTLIB_VERSION to $INSTALLED_MATPLOTLIB_VERSION"
-            echo "matplotlib==$INSTALLED_MATPLOTLIB_VERSION" > requirements_snapshot.txt
+            echo "Requirements have changed!"
+            echo "Old versions:"
+            echo "$INSTALLED_PACKAGES" | grep -vF -f requirements_snapshot.txt
+            echo "$INSTALLED_PACKAGES" > requirements_snapshot.txt
             # Add any additional steps for notification here
           fi
