@@ -25,14 +25,14 @@ jobs:
           pip install -r requirements.txt
 
       - name: Check for changes
+        id: check
         run: |
-          # Get the currently installed packages and their versions
           INSTALLED_PACKAGES=$(pip freeze)
 
-          # Compare with versions in requirements.txt
-          if diff -u <(echo "$INSTALLED_PACKAGES") <(cat requirements.txt); then
+          if diff -u <(echo "$INSTALLED_PACKAGES") <(cat requirements_snapshot.txt); then
             echo "Requirements are up to date."
           else
             echo "Requirements have changed!"
+            echo "$INSTALLED_PACKAGES" > requirements_snapshot.txt
             # Add any additional steps for notification here
           fi
