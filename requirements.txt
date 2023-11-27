@@ -2,6 +2,4 @@ Flask-Cors
 cryptography
 marshmallow
 frontegg==2.1.7
-numpy
-matplotlib
-seaborn
+
