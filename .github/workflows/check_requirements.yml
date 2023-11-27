@@ -26,12 +26,18 @@ jobs:
 
       - name: Check for changes
         run: |
-          # Get the currently installed packages and their versions
           INSTALLED_PACKAGES=$(pip freeze)
+
+          # Print the version of each installed package
+          echo "Installed package versions:"
+          echo "$INSTALLED_PACKAGES"
 
           # Compare with versions in requirements.txt
           if diff -u <(echo "$INSTALLED_PACKAGES") <(cat requirements.txt); then
             echo "Requirements are up to date."
+          fi
+          
+          # Additional steps for notification or any other logic can be added here
           else
             echo "Requirements have changed!"
             # Add any additional steps for notification here
