@@ -33,6 +33,9 @@ jobs:
           echo "$INSTALLED_PACKAGES"
 
           # Compare with versions in requirements.txt using Python
-          if python -c "from difflib import unified_diff; import sys; sys.exit(len(list(unified_diff('$INSTALLED_PACKAGES'.splitlines(), open('requirements.txt').read().splitlines()))) == 0)"; then
+          if python -c "from difflib import unified_diff; import sys; sys.exit(len(list(unified_diff('''$INSTALLED_PACKAGES'''.splitlines(), open('requirements.txt').read().splitlines()))) == 0)"; then
             echo "Requirements are up to date."
           fi
+          
+          # Additional steps for notification or any other logic can be added here
+
