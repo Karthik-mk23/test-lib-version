@@ -32,10 +32,8 @@ jobs:
           echo "Installed package versions:"
           echo "$INSTALLED_PACKAGES"
 
-          # Compare with versions in requirements.txt using Python
-          DIFF_RESULT=$(python -c "from difflib import unified_diff; import sys; sys.exit(len(list(unified_diff('''$INSTALLED_PACKAGES'''.splitlines(), open('requirements.txt').read().splitlines()))) == 0)")
-          
-          if [ "$DIFF_RESULT" -eq 0 ]; then
+          # Compare with versions in requirements.txt
+          if comm -23 <(sort requirements.txt) <(echo "$INSTALLED_PACKAGES" | sort); then
             echo "Requirements are up to date."
           else
             echo "Requirements have changed!"
