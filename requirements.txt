@@ -1,5 +1,5 @@
 Flask-Cors
 cryptography
 marshmallow
-openai
 frontegg==2.1.7
+numpy
